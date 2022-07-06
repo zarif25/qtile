@@ -5,9 +5,20 @@ from libqtile.lazy import lazy
 # from libqtile.utils import guess_terminal
 import os
 import subprocess
-
 from libqtile import hook
 
+
+PRIMARY_COLOR = "#6790eb"
+PRIMARY_FONT = "CaskaydiaCove Nerd Font"
+PRIMARY_ARABIC_FONT = "DejaVu Sans Mono Bold"
+MATERIAL_COLORS = {
+    # "purple": "#ff5370",
+    "red": "#f07178",
+    # "orange": "#f78c6c",
+    "cyan": "#89ddff",
+    "green": "#c3e88d",
+    "yellow": "#ffcb6b",
+}
 
 mod = "mod4"
 terminal = "gnome-terminal"
@@ -99,7 +110,7 @@ for i in groups:
 
 layouts = [
     layout.Columns(
-        border_focus_stack="#6790eb", border_focus="#6790eb", border_width=2
+        border_focus_stack=PRIMARY_COLOR, border_focus=PRIMARY_COLOR, border_width=2
     ),
     layout.Max(),
     # Try more layouts by unleashing below layouts.
@@ -116,9 +127,9 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="sans",
+    font=PRIMARY_FONT,
     fontsize=12,
-    padding=3,
+    padding=7,
 )
 extension_defaults = widget_defaults.copy()
 
@@ -126,10 +137,24 @@ screens = [
     Screen(
         top=bar.Bar(
             [
-                widget.CurrentLayoutIcon(scale=0.6),
-                widget.GroupBox(highlight_method="block", this_current_screen_border="#6790eb", this_screen_border ="#6790eb", rounded=False,),
-                widget.Prompt(),
-                widget.WindowName(),
+                # widget.CurrentLayoutIcon(scale=0.5),
+                widget.GroupBox(
+                    highlight_method="block",
+                    this_current_screen_border=PRIMARY_COLOR,
+                    this_screen_border=PRIMARY_COLOR,
+                    rounded=False,
+                    margin=0,
+                    borderwidth=0,
+                    padding=7,
+                    disable_drag=True,
+                    fontsize=15,
+                ),
+                widget.Prompt(
+                    font=PRIMARY_FONT,
+                    background=MATERIAL_COLORS["cyan"],
+                    foreground="#000000",
+                ),
+                widget.WindowName(font=PRIMARY_FONT, foreground=PRIMARY_COLOR),
                 # widget.Chord(
                 #     chords_colors={
                 #         "launch": ("#ff0000", "#ffffff"),
@@ -138,10 +163,33 @@ screens = [
                 # ),
                 # widget.TextBox("default config", name="default"),q
                 # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-                widget.Systray(),
-                widget.PulseVolume(),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(default_text="[X]", countdown_format="[{}]"),
+                widget.Systray(icon_size=15),
+                widget.Spacer(length=10),
+                widget.TextBox(
+                    text="墳",
+                    font=PRIMARY_FONT,
+                    background=MATERIAL_COLORS["yellow"],
+                    foreground="#000000",
+                ),
+                widget.Volume(
+                    font=PRIMARY_FONT,
+                    background=MATERIAL_COLORS["yellow"],
+                    foreground="#000000",
+                ),
+                widget.Clock(
+                    format="%a %d %b %I:%M %p",
+                    font=PRIMARY_FONT,
+                    background=MATERIAL_COLORS["green"],
+                    foreground="#000000",
+                ),
+                widget.QuickExit(
+                    default_text="﫼",
+                    countdown_format="{}",
+                    font=PRIMARY_FONT,
+                    background=MATERIAL_COLORS["red"],
+                    foreground="#000000",
+                    countdown_start=1,
+                ),
             ],
             24,
             # border_width=[2, 0, 2, 0],  # Draw bottom and bottom borders
