@@ -18,6 +18,7 @@ MATERIAL_COLORS = {
     "cyan": "#89ddff",
     "green": "#c3e88d",
     "yellow": "#ffcb6b",
+    "erie black": "#212121",
 }
 
 mod = "mod4"
@@ -128,7 +129,7 @@ layouts = [
 
 widget_defaults = dict(
     font=PRIMARY_FONT,
-    fontsize=12,
+    fontsize=15,
     padding=7,
 )
 extension_defaults = widget_defaults.copy()
@@ -138,6 +139,16 @@ screens = [
         top=bar.Bar(
             [
                 # widget.CurrentLayoutIcon(scale=0.5),
+                widget.Prompt(
+                    font=PRIMARY_FONT,
+                    background=MATERIAL_COLORS["cyan"],
+                    foreground="#000000",
+                    cursor_color="#000000",
+                    prompt="$",
+                ),
+                widget.WindowName(font=PRIMARY_FONT, foreground=PRIMARY_COLOR),
+                widget.Systray(icon_size=15),
+                widget.Spacer(length=10),
                 widget.GroupBox(
                     highlight_method="block",
                     this_current_screen_border=PRIMARY_COLOR,
@@ -147,14 +158,11 @@ screens = [
                     borderwidth=0,
                     padding=7,
                     disable_drag=True,
-                    fontsize=15,
+                    background=MATERIAL_COLORS['erie black'],
+                    foreground=PRIMARY_COLOR,
+                    inactive="#ffffff",
+                    # fontsize=15,
                 ),
-                widget.Prompt(
-                    font=PRIMARY_FONT,
-                    background=MATERIAL_COLORS["cyan"],
-                    foreground="#000000",
-                ),
-                widget.WindowName(font=PRIMARY_FONT, foreground=PRIMARY_COLOR),
                 # widget.Chord(
                 #     chords_colors={
                 #         "launch": ("#ff0000", "#ffffff"),
@@ -163,8 +171,6 @@ screens = [
                 # ),
                 # widget.TextBox("default config", name="default"),q
                 # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-                widget.Systray(icon_size=15),
-                widget.Spacer(length=10),
                 widget.TextBox(
                     text="墳",
                     font=PRIMARY_FONT,
