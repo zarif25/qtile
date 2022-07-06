@@ -1,5 +1,5 @@
 from datetime import datetime
-from libqtile import bar, layout, widget
+from libqtile import bar, layout, widget, extension
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 
@@ -37,7 +37,18 @@ keys = [
     Key([], "XF86AudioRaiseVolume", lazy.spawn("amixer -q sset Master 10%+")),
     Key([], "XF86AudioLowerVolume", lazy.spawn("amixer -q sset Master 10%-")),
     Key([], "XF86AudioMute", lazy.spawn("amixer -q sset Master toggle")),
-    # Switch between windowsq
+    # screenshot
+    Key([], 'Print', lazy.spawn("scrot ~/Pictures/Screenshots/%Y-%m-%d-%T-screenshot.png")),
+    # dmenu
+    Key([mod], 'p', lazy.run_extension(extension.DmenuRun(
+        fontsize=13,
+        dmenu_prompt="$",
+        background=MATERIAL_COLORS['erie black'],
+        foreground=PRIMARY_COLOR,
+        selected_foreground=MATERIAL_COLORS['erie black'],
+        selected_background=PRIMARY_COLOR,
+    ))),
+    # Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
@@ -235,6 +246,7 @@ screens = [
             24,
             # border_width=[2, 0, 2, 0],  # Draw bottom and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+            background = "#0a0a0a"
         ),
     ),
 ]
