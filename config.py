@@ -1,7 +1,13 @@
 from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
-from libqtile.utils import guess_terminal
+
+# from libqtile.utils import guess_terminal
+import os
+import subprocess
+
+from libqtile import hook
+
 
 mod = "mod4"
 terminal = "gnome-terminal"
@@ -12,6 +18,12 @@ keys = [
     # custom keys
     Key([mod], "b", lazy.spawn("google-chrome-stable"), desc="Opens Google Chrome"),
     Key([mod], "t", lazy.spawn("org.telegram.desktop"), desc="Opens Telegram"),
+    Key([mod], "e", lazy.spawn("nautilus"), desc="Opens Nautilus"),
+    Key([mod], "x", lazy.spawn("systemctl poweroff"), desc="Shutdown"),
+    # Change the volume if your keyboard has special volume keys.
+    Key([], "XF86AudioRaiseVolume", lazy.spawn("amixer -q sset Master 10%+")),
+    Key([], "XF86AudioLowerVolume", lazy.spawn("amixer -q sset Master 10%-")),
+    Key([], "XF86AudioMute", lazy.spawn("amixer -q sset Master toggle")),
     # Switch between windowsq
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
@@ -86,7 +98,9 @@ for i in groups:
     )
 
 layouts = [
-    layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
+    layout.Columns(
+        border_focus_stack="#6790eb", border_focus="#6790eb", border_width=2
+    ),
     layout.Max(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
@@ -110,23 +124,24 @@ extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
-        bottom=bar.Bar(
+        top=bar.Bar(
             [
-                widget.CurrentLayout(),
-                widget.GroupBox(),
+                widget.CurrentLayoutIcon(scale=0.6),
+                widget.GroupBox(highlight_method="block", this_current_screen_border="#6790eb", this_screen_border ="#6790eb", rounded=False,),
                 widget.Prompt(),
                 widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        "launch": ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
+                # widget.Chord(
+                #     chords_colors={
+                #         "launch": ("#ff0000", "#ffffff"),
+                #     },
+                #     name_transform=lambda name: name.upper(),
+                # ),
                 # widget.TextBox("default config", name="default"),q
                 # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                 widget.Systray(),
+                widget.PulseVolume(),
                 widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(),
+                widget.QuickExit(default_text="[X]", countdown_format="[{}]"),
             ],
             24,
             # border_width=[2, 0, 2, 0],  # Draw bottom and bottom borders
@@ -186,3 +201,9 @@ wl_input_rules = None
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
 wmname = "LG3D"
+
+
+@hook.subscribe.startup_once
+def autostart():
+    home = os.path.expanduser("~")
+    subprocess.call([home + "/.config/qtile/scripts/autostart.sh"])
