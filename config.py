@@ -1,3 +1,4 @@
+from datetime import datetime
 from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
@@ -149,6 +150,40 @@ screens = [
                 widget.WindowName(font=PRIMARY_FONT, foreground=PRIMARY_COLOR),
                 widget.Systray(icon_size=15),
                 widget.Spacer(length=10),
+
+                widget.TextBox(text='BRAC:', foreground=PRIMARY_COLOR),
+                widget.Countdown(
+                    date=datetime(2022, 7, 22),
+                    format="{D}d ",
+                    update_interval=60,
+                ),
+
+                widget.TextBox(text='SUST:', foreground=PRIMARY_COLOR),
+                widget.Countdown(
+                    date=datetime(2022, 7, 30),
+                    format="{D}d ",
+                    update_interval=60,
+                ),
+
+                widget.TextBox(text='JU:', foreground=PRIMARY_COLOR),
+                widget.Countdown(
+                    date=datetime(2022, 8, 1),
+                    format="{D}d ",
+                    update_interval=60,
+                ),
+
+                widget.TextBox(text='KUET:', foreground=PRIMARY_COLOR),
+                widget.Countdown(
+                    date=datetime(2022, 8, 6),
+                    format="{D}d ",
+                    update_interval=60,
+                ),
+                widget.TextBox(text='NSU:', foreground=PRIMARY_COLOR),
+                widget.Countdown(
+                    date=datetime(2022, 8, 13),
+                    format="{D}d ",
+                    update_interval=60,
+                ),
                 widget.GroupBox(
                     highlight_method="block",
                     this_current_screen_border=PRIMARY_COLOR,
