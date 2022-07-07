@@ -40,10 +40,10 @@ keys = [
     # screenshot
     Key([], 'Print', lazy.spawn("scrot ~/Pictures/Screenshots/%Y-%m-%d-%T-screenshot.png")),
     # dmenu
-    Key([mod], 'p', lazy.run_extension(extension.DmenuRun(
+    Key([mod, 'shift'], 'Return', lazy.run_extension(extension.DmenuRun(
         fontsize=13,
         dmenu_prompt="$",
-        background=MATERIAL_COLORS['erie black'],
+        background='#000000',
         foreground=PRIMARY_COLOR,
         selected_foreground=MATERIAL_COLORS['erie black'],
         selected_background=PRIMARY_COLOR,
@@ -80,12 +80,12 @@ keys = [
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
-    Key(
-        [mod, "shift"],
-        "Return",
-        lazy.layout.toggle_split(),
-        desc="Toggle between split and unsplit sides of stack",
-    ),
+    # Key(
+    #     [mod, "shift"],
+    #     "Return",
+    #     lazy.layout.toggle_split(),
+    #     desc="Toggle between split and unsplit sides of stack",
+    # ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
