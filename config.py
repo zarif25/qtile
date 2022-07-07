@@ -32,10 +32,10 @@ keys = [
     Key([mod], "b", lazy.spawn("google-chrome-stable"), desc="Opens Google Chrome"),
     Key([mod], "t", lazy.spawn("org.telegram.desktop"), desc="Opens Telegram"),
     Key([mod], "e", lazy.spawn("nautilus"), desc="Opens Nautilus"),
-    Key([mod], "x", lazy.spawn("systemctl poweroff"), desc="Shutdown"),
+    Key([mod, 'shift'], "x", lazy.spawn("systemctl poweroff"), desc="Shutdown"),
     # Change the volume if your keyboard has special volume keys.
-    Key([], "XF86AudioRaiseVolume", lazy.spawn("amixer -q sset Master 10%+")),
-    Key([], "XF86AudioLowerVolume", lazy.spawn("amixer -q sset Master 10%-")),
+    Key([], "XF86AudioRaiseVolume", lazy.spawn("amixer -q sset Master 5%+")),
+    Key([], "XF86AudioLowerVolume", lazy.spawn("amixer -q sset Master 5%-")),
     Key([], "XF86AudioMute", lazy.spawn("amixer -q sset Master toggle")),
     # screenshot
     Key([], 'Print', lazy.spawn("scrot ~/Pictures/Screenshots/%Y-%m-%d-%T-screenshot.png")),
@@ -48,6 +48,8 @@ keys = [
         selected_foreground=MATERIAL_COLORS['erie black'],
         selected_background=PRIMARY_COLOR,
     ))),
+    # toggle full screen
+    Key([mod], "f", lazy.window.toggle_fullscreen(), desc="Toggle fullscreen"),
     # Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
@@ -248,6 +250,8 @@ screens = [
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
             background = "#0a0a0a"
         ),
+        wallpaper='~/.config/qtile/wall.png',
+        wallpaper_mode='fill',
     ),
 ]
 
