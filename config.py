@@ -23,31 +23,42 @@ MATERIAL_COLORS = {
 }
 
 mod = "mod4"
-terminal = "gnome-terminal"
+left_alt = "mod1"
+terminal = "alacritty"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
     # custom keys
-    Key([mod], "b", lazy.spawn("google-chrome-stable"), desc="Opens Google Chrome"),
+    Key([mod], "b", lazy.spawn("firefox"), desc="Opens Firefox"),
     Key([mod], "t", lazy.spawn("org.telegram.desktop"), desc="Opens Telegram"),
-    Key([mod], "e", lazy.spawn("nautilus"), desc="Opens Nautilus"),
-    Key([mod, 'shift'], "x", lazy.spawn("systemctl poweroff"), desc="Shutdown"),
+    Key([mod], "e", lazy.spawn("alacritty --command ranger"), desc="Opens Ranger"),
+    Key([mod, "shift"], "x", lazy.spawn("systemctl poweroff"), desc="Shutdown"),
     # Change the volume if your keyboard has special volume keys.
     Key([], "XF86AudioRaiseVolume", lazy.spawn("amixer -q sset Master 5%+")),
     Key([], "XF86AudioLowerVolume", lazy.spawn("amixer -q sset Master 5%-")),
     Key([], "XF86AudioMute", lazy.spawn("amixer -q sset Master toggle")),
     # screenshot
-    Key([], 'Print', lazy.spawn("scrot ~/Pictures/Screenshots/%Y-%m-%d-%T-screenshot.png")),
+    Key(
+        [],
+        "Print",
+        lazy.spawn("scrot ~/Pictures/Screenshots/%Y-%m-%d-%T-screenshot.png"),
+    ),
     # dmenu
-    Key([mod, 'shift'], 'Return', lazy.run_extension(extension.DmenuRun(
-        fontsize=13,
-        dmenu_prompt="$",
-        background='#000000',
-        foreground=PRIMARY_COLOR,
-        selected_foreground=MATERIAL_COLORS['erie black'],
-        selected_background=PRIMARY_COLOR,
-    ))),
+    Key(
+        [mod],
+        "space",
+        lazy.run_extension(
+            extension.DmenuRun(
+                fontsize=13,
+                dmenu_prompt="$",
+                background="#000000",
+                foreground=PRIMARY_COLOR,
+                selected_foreground=MATERIAL_COLORS["erie black"],
+                selected_background=PRIMARY_COLOR,
+            )
+        ),
+    ),
     # toggle full screen
     Key([mod], "f", lazy.window.toggle_fullscreen(), desc="Toggle fullscreen"),
     # Switch between windows
@@ -55,7 +66,7 @@ keys = [
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
+    # Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
     Key(
@@ -71,12 +82,12 @@ keys = [
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
     # Grow windows. If current window is on the edge of screen and direction
     # will be to screen edge - window would shrink.
-    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
+    Key([mod, left_alt], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key(
-        [mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
+        [mod, left_alt], "l", lazy.layout.grow_right(), desc="Grow window to the right"
     ),
-    Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
-    Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    Key([mod, left_alt], "j", lazy.layout.grow_down(), desc="Grow window down"),
+    Key([mod, left_alt], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
@@ -160,42 +171,47 @@ screens = [
                     cursor_color="#000000",
                     prompt="$",
                 ),
-                widget.WindowName(font=PRIMARY_FONT, foreground=PRIMARY_COLOR),
+                widget.WindowName(
+                    font=PRIMARY_FONT,
+                    foreground=PRIMARY_COLOR,
+                    empty_group_string="You will have plenty of time to rice qtile after admission",
+                ),
                 widget.Systray(icon_size=15),
                 widget.Spacer(length=10),
-
-                widget.TextBox(text='BRAC:', foreground=PRIMARY_COLOR),
+                widget.TextBox(text="BRAC:", foreground=PRIMARY_COLOR),
                 widget.Countdown(
                     date=datetime(2022, 7, 22),
                     format="{D}d ",
                     update_interval=60,
+                    padding=0,
                 ),
-
-                widget.TextBox(text='SUST:', foreground=PRIMARY_COLOR),
+                widget.TextBox(text="SUST:", foreground=PRIMARY_COLOR),
                 widget.Countdown(
                     date=datetime(2022, 7, 30),
                     format="{D}d ",
                     update_interval=60,
+                    padding=0,
                 ),
-
-                widget.TextBox(text='JU:', foreground=PRIMARY_COLOR),
+                widget.TextBox(text="JU:", foreground=PRIMARY_COLOR),
                 widget.Countdown(
                     date=datetime(2022, 8, 1),
                     format="{D}d ",
                     update_interval=60,
+                    padding=0,
                 ),
-
-                widget.TextBox(text='KUET:', foreground=PRIMARY_COLOR),
+                widget.TextBox(text="KUET:", foreground=PRIMARY_COLOR),
                 widget.Countdown(
                     date=datetime(2022, 8, 6),
                     format="{D}d ",
                     update_interval=60,
+                    padding=0,
                 ),
-                widget.TextBox(text='NSU:', foreground=PRIMARY_COLOR),
+                widget.TextBox(text="NSU:", foreground=PRIMARY_COLOR),
                 widget.Countdown(
                     date=datetime(2022, 8, 13),
                     format="{D}d ",
                     update_interval=60,
+                    padding=0,
                 ),
                 widget.GroupBox(
                     highlight_method="block",
@@ -206,7 +222,7 @@ screens = [
                     borderwidth=0,
                     padding=7,
                     disable_drag=True,
-                    background=MATERIAL_COLORS['erie black'],
+                    background=MATERIAL_COLORS["erie black"],
                     foreground=PRIMARY_COLOR,
                     inactive="#ffffff",
                     # fontsize=15,
@@ -219,22 +235,41 @@ screens = [
                 # ),
                 # widget.TextBox("default config", name="default"),q
                 # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-                widget.TextBox(
-                    text="墳",
-                    font=PRIMARY_FONT,
-                    background=MATERIAL_COLORS["yellow"],
-                    foreground="#000000",
-                ),
+                # widget.TextBox(
+                #     text="墳",
+                #     font=PRIMARY_FONT,
+                #     background=MATERIAL_COLORS["yellow"],
+                #     foreground="#000000",
+                # ),
                 widget.Volume(
                     font=PRIMARY_FONT,
                     background=MATERIAL_COLORS["yellow"],
                     foreground="#000000",
+                    fmt="墳 {}",
                 ),
                 widget.Clock(
                     format="%a %d %b %I:%M %p",
                     font=PRIMARY_FONT,
                     background=MATERIAL_COLORS["green"],
                     foreground="#000000",
+                ),
+                widget.TextBox(
+                    text="",
+                    foreground="#000000",
+                    background=PRIMARY_COLOR,
+                ),
+                widget.Battery(
+                    battery=0,
+                    format="{percent:2.0%}",
+                    foreground="#000000",
+                    background=PRIMARY_COLOR,
+                    padding=0,
+                ),
+                widget.Battery(
+                    battery=1,
+                    format="{percent:2.0%}",
+                    foreground="#000000",
+                    background=PRIMARY_COLOR,
                 ),
                 widget.QuickExit(
                     default_text="﫼",
@@ -248,10 +283,10 @@ screens = [
             24,
             # border_width=[2, 0, 2, 0],  # Draw bottom and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
-            background = "#0a0a0a"
+            background="#0a0a0a",
         ),
-        wallpaper='~/.config/qtile/wall.png',
-        wallpaper_mode='fill',
+        wallpaper="~/.config/qtile/wall.png",
+        wallpaper_mode="fill",
     ),
 ]
 
