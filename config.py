@@ -40,14 +40,16 @@ keys = [
     Key([], "XF86AudioMute", lazy.spawn("amixer -q sset Master toggle")),
     # screenshot
     Key(
-        [],
-        "Print",
-        lazy.spawn("scrot ~/Pictures/Screenshots/%Y-%m-%d-%T-screenshot.png"),
+        [mod, "shift"],
+        "s",
+        lazy.spawn(
+            "scrot --line style=dash,width=3 --select=blur --freeze /home/seven89/Pictures/Screenshots/ --exec 'xclip -selection clipboard -t \"image/png\" < $f'"
+        ),
     ),
     # dmenu
     Key(
         [mod],
-        "space",
+        "Return",
         lazy.run_extension(
             extension.DmenuRun(
                 fontsize=13,
@@ -99,7 +101,7 @@ keys = [
     #     lazy.layout.toggle_split(),
     #     desc="Toggle between split and unsplit sides of stack",
     # ),
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod, "shift"], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
@@ -159,11 +161,40 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
+
+def get_watson_status():
+    w_stat = subprocess.check_output(["watson", "status"])
+    message = w_stat.decode("utf-8").replace("\n", "")
+    if message.startswith("Project "):
+        return (
+            message[8:-17]
+            .replace(" started ", "|")
+            .replace(" ago", "")
+            .replace(" seconds", "s")
+            .replace(" minutes", "min")
+            .replace(" [", "|")
+            .replace("]", "")
+        )
+    return ""
+
+
 screens = [
     Screen(
         top=bar.Bar(
             [
                 # widget.CurrentLayoutIcon(scale=0.5),
+                # widget.TextBox(
+                #     text="",
+                #     foreground="#000000",
+                #     background=PRIMARY_COLOR,
+                #     # padding=0,
+                # ),
+                widget.GenPollText(
+                    func=get_watson_status,
+                    update_interval=2,
+                    foreground="#000000",
+                    background=MATERIAL_COLORS["cyan"],
+                ),
                 widget.Prompt(
                     font=PRIMARY_FONT,
                     background=MATERIAL_COLORS["cyan"],
