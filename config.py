@@ -11,7 +11,11 @@ from libqtile import hook
 
 PRIMARY_COLOR = "#6790eb"
 PRIMARY_FONT = "CaskaydiaCove Nerd Font"
-PRIMARY_ARABIC_FONT = "DejaVu Sans Mono Bold"
+# PRIMARY_FONT = "Hack Nerd Font"
+# PRIMARY_ARABIC_FONT = "Noto Sans Arabic UI Heavy"
+# PRIMARY_ARABIC_FONT = "Noto Sans Indic Siyaq Numbers"
+PRIMARY_ARABIC_FONT = "Noto Sans Thaana Heavy"
+# PRIMARY_ARABIC_FONT = "DejaVu Sans Mono Bold"
 MATERIAL_COLORS = {
     # "purple": "#ff5370",
     "red": "#f07178",
@@ -21,6 +25,7 @@ MATERIAL_COLORS = {
     "yellow": "#ffcb6b",
     "erie black": "#212121",
 }
+BATTERY_ICONS = ["", "", "", "", "", "", "", "", "", "", ""]
 
 mod = "mod4"
 left_alt = "mod1"
@@ -170,12 +175,38 @@ def get_watson_status():
             message[8:-17]
             .replace(" started ", "|")
             .replace(" ago", "")
+            .replace("a minute", "1min")
+            .replace("just now", "now")
             .replace(" seconds", "s")
             .replace(" minutes", "min")
             .replace(" [", "|")
             .replace("]", "")
+            .replace(" ", "")
         )
     return ""
+
+def get_plug_icon():
+    ac_adapter_status = subprocess.check_output(["acpi", "--ac-adapter"]).decode(
+        "utf-8"
+    )[11:-1]
+    is_charging = ac_adapter_status == "on-line"
+    return "ﮣ" if is_charging else "ﮤ"
+
+def get_battery_icon():
+    def extract_percentage(text: str):
+        return int(text[11:].split(", ")[1][:-1])
+
+    bat_info = subprocess.check_output(["acpi", "--battery"]).decode("utf-8")[:-1]
+    bat1_percentage, bat2_percentage = [
+        extract_percentage(info) for info in bat_info.split("\n")
+    ]
+
+    def get_battery_icon(percentage: int):
+        return BATTERY_ICONS[percentage // 10]
+
+
+
+    return f"{get_battery_icon(bat1_percentage)} {get_battery_icon(bat2_percentage)} {get_plug_icon()}"
 
 
 screens = [
@@ -209,38 +240,58 @@ screens = [
                 ),
                 widget.Systray(icon_size=15),
                 widget.Spacer(length=10),
-                widget.TextBox(text="BRAC:", foreground=PRIMARY_COLOR),
+                widget.TextBox(
+                    text="BRAC:",
+                    foreground=PRIMARY_COLOR,
+                    padding=0,
+                ),
                 widget.Countdown(
                     date=datetime(2022, 7, 22),
-                    format="{D}d ",
+                    format="{D} ",
                     update_interval=60,
                     padding=0,
                 ),
-                widget.TextBox(text="SUST:", foreground=PRIMARY_COLOR),
+                widget.TextBox(
+                    text="GST:",
+                    foreground=PRIMARY_COLOR,
+                    padding=0,
+                ),
                 widget.Countdown(
                     date=datetime(2022, 7, 30),
-                    format="{D}d ",
+                    format="{D} ",
                     update_interval=60,
                     padding=0,
                 ),
-                widget.TextBox(text="JU:", foreground=PRIMARY_COLOR),
+                widget.TextBox(
+                    text="JU:",
+                    foreground=PRIMARY_COLOR,
+                    padding=0,
+                ),
                 widget.Countdown(
                     date=datetime(2022, 8, 1),
-                    format="{D}d ",
+                    format="{D} ",
                     update_interval=60,
                     padding=0,
                 ),
-                widget.TextBox(text="KUET:", foreground=PRIMARY_COLOR),
+                widget.TextBox(
+                    text="KUET:",
+                    foreground=PRIMARY_COLOR,
+                    padding=0,
+                ),
                 widget.Countdown(
                     date=datetime(2022, 8, 6),
-                    format="{D}d ",
+                    format="{D} ",
                     update_interval=60,
                     padding=0,
                 ),
-                widget.TextBox(text="NSU:", foreground=PRIMARY_COLOR),
+                widget.TextBox(
+                    text="NSU:",
+                    foreground=PRIMARY_COLOR,
+                    padding=0,
+                ),
                 widget.Countdown(
                     date=datetime(2022, 8, 13),
-                    format="{D}d ",
+                    format="{D} ",
                     update_interval=60,
                     padding=0,
                 ),
@@ -256,6 +307,7 @@ screens = [
                     background=MATERIAL_COLORS["erie black"],
                     foreground=PRIMARY_COLOR,
                     inactive="#ffffff",
+                    font=PRIMARY_ARABIC_FONT
                     # fontsize=15,
                 ),
                 # widget.Chord(
@@ -279,37 +331,43 @@ screens = [
                     fmt="墳 {}",
                 ),
                 widget.Clock(
-                    format="%a %d %b %I:%M %p",
+                    format="%a %d %b %I:%M",
                     font=PRIMARY_FONT,
                     background=MATERIAL_COLORS["green"],
                     foreground="#000000",
                 ),
-                widget.TextBox(
-                    text="",
+                # widget.TextBox(
+                #     text="",
+                #     foreground="#000000",
+                #     background=PRIMARY_COLOR,
+                # ),
+                # widget.Battery(
+                #     battery=0,
+                #     format="{percent:2.0%}",
+                #     foreground="#000000",
+                #     background=PRIMARY_COLOR,
+                #     padding=0,
+                # ),
+                # widget.Battery(
+                #     battery=1,
+                #     format="{percent:2.0%}",
+                #     foreground="#000000",
+                #     background=PRIMARY_COLOR,
+                # ),
+                widget.GenPollText(
+                    func=get_battery_icon,
+                    update_interval=2,
                     foreground="#000000",
                     background=PRIMARY_COLOR,
                 ),
-                widget.Battery(
-                    battery=0,
-                    format="{percent:2.0%}",
-                    foreground="#000000",
-                    background=PRIMARY_COLOR,
-                    padding=0,
-                ),
-                widget.Battery(
-                    battery=1,
-                    format="{percent:2.0%}",
-                    foreground="#000000",
-                    background=PRIMARY_COLOR,
-                ),
-                widget.QuickExit(
-                    default_text="﫼",
-                    countdown_format="{}",
-                    font=PRIMARY_FONT,
-                    background=MATERIAL_COLORS["red"],
-                    foreground="#000000",
-                    countdown_start=1,
-                ),
+                # widget.QuickExit(
+                #     default_text="﫼",
+                #     countdown_format="{}",
+                #     font=PRIMARY_FONT,
+                #     background=MATERIAL_COLORS["red"],
+                #     foreground="#000000",
+                #     countdown_start=1,
+                # ),
             ],
             24,
             # border_width=[2, 0, 2, 0],  # Draw bottom and bottom borders
