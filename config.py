@@ -176,6 +176,7 @@ def get_watson_status():
             .replace(" started ", "|")
             .replace(" ago", "")
             .replace("a minute", "1min")
+            .replace("an hour", "1h")
             .replace("just now", "now")
             .replace(" seconds", "s")
             .replace(" minutes", "min")
@@ -185,12 +186,14 @@ def get_watson_status():
         )
     return ""
 
+
 def get_plug_icon():
     ac_adapter_status = subprocess.check_output(["acpi", "--ac-adapter"]).decode(
         "utf-8"
     )[11:-1]
     is_charging = ac_adapter_status == "on-line"
     return "ﮣ" if is_charging else "ﮤ"
+
 
 def get_battery_icon():
     def extract_percentage(text: str):
@@ -203,8 +206,6 @@ def get_battery_icon():
 
     def get_battery_icon(percentage: int):
         return BATTERY_ICONS[percentage // 10]
-
-
 
     return f"{get_battery_icon(bat1_percentage)} {get_battery_icon(bat2_percentage)} {get_plug_icon()}"
 
